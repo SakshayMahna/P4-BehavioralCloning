@@ -163,6 +163,7 @@ def _load_image(line, index, relative_path):
     current_path = relative_path + filename
     image = cv2.imread(current_path)
     image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+    image = (image / 255.0) - 0.5
 
     if index == 1:
         # Left Image
