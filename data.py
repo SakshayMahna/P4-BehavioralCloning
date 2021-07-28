@@ -4,7 +4,8 @@ Python module to load the data for training
 import cv2
 import csv
 import numpy as np
-import concurrent.futures
+from sklearn.model_selection import train_test_split
+from sklearn.utils import shuffle
 from tqdm import tqdm
 
 # Function to load dataset
@@ -69,6 +70,79 @@ def load_dataset(csv_path, relative_path):
     y = np.array(measurements)
 
     return X, y
+
+# Function to generate a Generator
+def load_generator(csv_path, relative_path, batch_size = 5):
+    """
+    Inputs
+    ---
+    csv_path: csv file to read data from
+    relative_path: relative path of the data
+    batch_size: batch size of the generator (factor of 6)
+
+    Outputs
+    ---
+    generator: generator function
+    """
+    lines = []
+    with open(csv_path) as csvfile:
+        reader = csv.reader(csvfile)
+        print("Loading CSV File ...")
+        for line in tqdm(reader):
+            lines.append(line)
+    
+    train_data, validation_data = train_test_split(lines, test_size=0.2)
+
+    # Define a generator function
+    def generator(data, batch_size = batch_size):
+        num_data = len(data)
+        while True:
+            shuffle(data)
+            for offset in range(0, num_data, batch_size):
+                batch_data = data[offset : offset + batch_size]
+
+                images = []; measurements = []
+                for batch in batch_data:
+                    # Center Image
+                    image, measurement = _load_image(batch, 0, relative_path)
+                    images.append(image)
+                    measurements.append(measurement)
+
+                    image_flipped = np.fliplr(image)
+                    images.append(image_flipped)
+
+                    measurement_flipped = -1 * measurement
+                    measurements.append(measurement_flipped)
+
+                    # Left Image
+                    image, measurement = _load_image(batch, 1, relative_path)
+                    images.append(image)
+                    measurements.append(measurement)
+
+                    image_flipped = np.fliplr(image)
+                    images.append(image_flipped)
+
+                    measurement_flipped = -1 * measurement
+                    measurements.append(measurement_flipped)
+
+                    # Right Image
+                    image, measurement = _load_image(batch, 2, relative_path)
+                    images.append(image)
+                    measurements.append(measurement)
+
+                    image_flipped = np.fliplr(image)
+                    images.append(image_flipped)
+
+                    measurement_flipped = -1 * measurement
+                    measurements.append(measurement_flipped)
+                
+                X = np.array(images)
+                y = np.array(measurements)
+
+                X, y = shuffle(X, y)
+                yield (X, y)
+    
+    return generator(train_data), generator(validation_data), len(train_data), len(validation_data)
 
 # Private function to load image
 def _load_image(line, index, relative_path):
