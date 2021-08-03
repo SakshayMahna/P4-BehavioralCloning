@@ -17,14 +17,17 @@ train_generator, validation_generator, train_length, validation_length = load_ge
 model = generate_model()
 model.compile(loss = 'mse', optimizer = 'adam')
 # model.fit(X, y, validation_split = 0.2, shuffle = True, epochs = 4)
+# Fit generator
 history_object = model.fit_generator(
     train_generator, steps_per_epoch = ceil(train_length / BATCH_SIZE),
     validation_data = validation_generator, validation_steps = ceil(validation_length / BATCH_SIZE),
     epochs = 5, verbose = 1
 )
 
+# Save the model
 model.save('model.h5')
 
+# Plot loss functions
 plt.plot(history_object.history['loss'])
 plt.plot(history_object.history['val_loss'])
 plt.title('model mean squared error loss')

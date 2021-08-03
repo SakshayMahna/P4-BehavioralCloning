@@ -70,6 +70,7 @@ def generate_nvidia_model(model):
     ---
     https://images.nvidia.com/content/tegra/automotive/images/2016/solutions/pdf/end-to-end-dl-using-px.pdf
     """
+    # Add convolutional layers
     model.add(Conv2D(24, (5, 5), strides = (2, 2), activation = 'relu')) 
     model.add(Conv2D(36, (5, 5), strides = (2, 2), activation = 'relu'))
     model.add(Conv2D(48, (5, 5), strides = (2, 2), activation = 'relu'))
@@ -78,6 +79,7 @@ def generate_nvidia_model(model):
 
     model.add(Flatten())
 
+    # Add neural network layers
     model.add(Dense(100))
     model.add(Dense(50))
     model.add(Dense(10))

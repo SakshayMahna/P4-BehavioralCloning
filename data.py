@@ -22,6 +22,7 @@ def load_dataset(csv_path, relative_path):
     X: Training data numpy array
     y: Training labels numpy array
     """
+    # Read CSV lines
     lines = []
     with open(csv_path) as csvfile:
         reader = csv.reader(csvfile)
@@ -32,7 +33,7 @@ def load_dataset(csv_path, relative_path):
     images = []; measurements = []
     print("Loading Data ...")
 
-
+    # Read from CSV lines
     for line in tqdm(lines):
         # Center Image
         image, measurement = _load_image(line, 0, relative_path)
@@ -85,6 +86,7 @@ def load_generator(csv_path, relative_path, batch_size = 5):
     ---
     generator: generator function
     """
+    # Read CSV lines
     lines = []
     with open(csv_path) as csvfile:
         reader = csv.reader(csvfile)
@@ -103,6 +105,7 @@ def load_generator(csv_path, relative_path, batch_size = 5):
                 batch_data = data[offset : offset + batch_size]
 
                 images = []; measurements = []
+                # Generate batches
                 for batch in batch_data:
                     # Center Image
                     image, measurement = _load_image(batch, 0, relative_path)
