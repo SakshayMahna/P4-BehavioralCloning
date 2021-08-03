@@ -5,6 +5,7 @@ import cv2
 import csv
 import numpy as np
 from sklearn.model_selection import train_test_split
+import matplotlib.image as mpimg
 from sklearn.utils import shuffle
 from tqdm import tqdm
 
@@ -161,9 +162,7 @@ def _load_image(line, index, relative_path):
     source_path = line[index]
     filename = source_path.split('\\')[-1]
     current_path = relative_path + filename
-    image = cv2.imread(current_path)
-    image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
-    image = (image / 255.0) - 0.5
+    image = mpimg.imread(current_path)
 
     if index == 1:
         # Left Image
