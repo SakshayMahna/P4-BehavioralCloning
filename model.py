@@ -1,9 +1,9 @@
 """
 Python file for model definition
 """
-from tensorflow.keras.models import Sequential
-from tensorflow.keras.layers import (Flatten, Dense, Lambda,
-                                    Conv2D, MaxPool2D, Cropping2D)
+from keras.models import Sequential
+from keras.layers import (Flatten, Dense, Lambda,
+                          Conv2D, MaxPool2D, Cropping2D)
 
 # Function to generate model
 def generate_model(input_shape = (160, 320, 3)):
